@@ -60,7 +60,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className="text-6xl font-semibold">
-          Welcome to <a className='text-cyan-500 hover:underline' href={process.env.NEXT_PUBLIC_VERCEL_URL}>Gmail Purge</a>
+          Welcome to <a className='text-cyan-500 hover:underline' href="https://gmail-purge.vercel.app/">Gmail Purge</a>
         </h1>
 
         <div className={styles.description}>
