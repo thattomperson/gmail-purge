@@ -31,9 +31,7 @@ export default function Home() {
             return
           }
 
-          console.log(`hitting /api/labels/${label.id}/delete`)
           details = await fetcher(`/api/labels/${label.id}/delete`)
-          console.log(details)
           mutate(details);
         } while (details.messagesTotal > 0)
       } catch (err) {
@@ -62,7 +60,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className="text-6xl font-semibold">
-          Welcome to <a className='text-cyan-500 hover:underline' href="https://gmail-purge.ttp.sh">Gmail Purge</a>
+          Welcome to <a className='text-cyan-500 hover:underline' href={process.env.NEXT_PUBLIC_VERCEL_URL}>Gmail Purge</a>
         </h1>
 
         <div className={styles.description}>
