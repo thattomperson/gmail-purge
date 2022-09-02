@@ -38,7 +38,7 @@ export default function Home() {
             return;
           }
 
-          const before = details.messagesTotal;
+          const before = details.messagesTotal ?? labelDetails.messagesTotal;
 
           details = await fetcher(`/api/labels/${label.id}/delete`);
 
