@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
+    "fathom-client": "^3.5.0",
     "next": "12.1.6",
     "next-auth": "^4.3.4",
     "react": "18.1.0",

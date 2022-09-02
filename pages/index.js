@@ -5,19 +5,26 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import Button from '../components/Button';
 import Labels from '../components/Labels';
-import styles from '../styles/Home.module.css'
+import { record } from '../hooks/useFathom';
+import styles from '../styles/Home.module.css';
 
-const fetcher = (...args) => fetch(...args).then(res => res.json())
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const { data: labels } = useSWR(status === 'authenticated' ? '/api/labels' : null, fetcher);
-  const [label, setLabel] = useState(null)
-  const [deleting, setDeleting] = useState(false)
-  const { data: labelDetails, mutate } = useSWR(label ? `/api/labels/${label.id}` : null, fetcher);
+  const { data: labels } = useSWR(
+    status === 'authenticated' ? '/api/labels' : null,
+    fetcher,
+  );
+  const [label, setLabel] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const { data: labelDetails, mutate } = useSWR(
+    label ? `/api/labels/${label.id}` : null,
+    fetcher,
+  );
 
   useEffect(() => {
-    let subscribed = true
+    let subscribed = true;
 
     async function deleteMessages() {
       let details;
@@ -28,27 +35,34 @@ export default function Home() {
           }
 
           if (!subscribed) {
-            return
+            return;
           }
 
-          details = await fetcher(`/api/labels/${label.id}/delete`)
+          const before = details.messagesTotal;
+
+          details = await fetcher(`/api/labels/${label.id}/delete`);
+
+          const deleted = before.messagesTotal - details.messagesTotal;
+
+          if (deleted > 0) {
+            record('JUK5OTAF', deleted);
+          }
+
           mutate(details);
-        } while (details.messagesTotal > 0)
+        } while (details.messagesTotal > 0);
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        setDeleting(false)
+        setDeleting(false);
       }
     }
 
     if (deleting) {
-      deleteMessages()
-        .catch(err => console.error(err))
+      deleteMessages().catch((err) => console.error(err));
     }
 
-    return () => subscribed = false
-  }, [deleting, label, mutate])
-
+    return () => (subscribed = false);
+  }, [deleting, label, mutate]);
 
   return (
     <div className="flex flex-col content-center items-center h-[100vh]">
@@ -60,32 +74,47 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className="text-6xl font-semibold">
-          Welcome to <a className='text-cyan-500 hover:underline' href="https://gmail-purge.vercel.app/">Gmail Purge</a>
+          Welcome to{' '}
+          <a
+            className="text-cyan-500 hover:underline"
+            href="https://gmail-purge.vercel.app/"
+          >
+            Gmail Purge
+          </a>
         </h1>
 
         <div className={styles.description}>
-          {
-            status === "authenticated"
-              ? <div className='flex w-full space-x-4 items-center'>
-                <p>Signed in as {session.user.email}</p>
-                <Button onClick={signOut}>Sign Out</Button>
-              </div>
-              : <Button onClick={() => signIn('google')}>Sign In</Button>
-          }
+          {status === 'authenticated' ? (
+            <div className="flex w-full space-x-4 items-center">
+              <p>Signed in as {session.user.email}</p>
+              <Button onClick={signOut}>Sign Out</Button>
+            </div>
+          ) : (
+            <Button onClick={() => signIn('google')}>Sign In</Button>
+          )}
         </div>
 
-        {
-          status === "authenticated"
-            ? <div className='w-full flex content-center justify-around'>
-              <div className='w-1/2'>
-                <div >
-                  <Labels labels={labels} label={label} selectedAltText={labelDetails ? `${labelDetails.messagesTotal} Messages` : null} onChange={setLabel} />
-                </div>
+        {status === 'authenticated' ? (
+          <div className="w-full flex content-center justify-around">
+            <div className="w-1/2">
+              <div>
+                <Labels
+                  labels={labels}
+                  label={label}
+                  selectedAltText={
+                    labelDetails
+                      ? `${labelDetails.messagesTotal} Messages`
+                      : null
+                  }
+                  onChange={setLabel}
+                />
               </div>
-              <Button onClick={() => setDeleting(!deleting)}>{deleting ? 'Cancel' : 'Start Deleting!'}</Button>
             </div>
-            : null
-        }
+            <Button onClick={() => setDeleting(!deleting)}>
+              {deleting ? 'Cancel' : 'Start Deleting!'}
+            </Button>
+          </div>
+        ) : null}
       </main>
 
       <footer className={styles.footer}>
@@ -101,5 +130,5 @@ export default function Home() {
         </a>
       </footer>
     </div>
-  )
+  );
 }
