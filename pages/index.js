@@ -42,7 +42,7 @@ export default function Home() {
 
           details = await fetcher(`/api/labels/${label.id}/delete`);
 
-          const deleted = before.messagesTotal - details.messagesTotal;
+          const deleted = before - details.messagesTotal;
 
           if (deleted > 0) {
             record('JUK5OTAF', deleted);
