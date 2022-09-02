@@ -1,8 +1,8 @@
-import Fathom from 'fathom-client';
+import * as Fathom from 'fathom-client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-export function useFathom(site_id: string, opts: Fathom.LoadOptions = {}) {
+export function useFathom(site_id, opts = {}) {
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +26,6 @@ export function useFathom(site_id: string, opts: Fathom.LoadOptions = {}) {
   }, []);
 }
 
-export function record(goal: string, value = 1) {
+export function record(goal, value = 1) {
   Fathom.trackGoal(goal, value);
 }

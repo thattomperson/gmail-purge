@@ -1,5 +1,6 @@
 
 import { SessionProvider } from "next-auth/react"
+import { useFathom } from '../hooks/useFathom';
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, }) {
