@@ -60,15 +60,14 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: "openid email profile https://mail.google.com/"
-        }
+          scope: 'openid email profile https://mail.google.com/',
+        },
       },
       // authorization: GOOGLE_AUTHORIZATION_URL,
     }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log(token, user, account)
       // Initial sign in
       if (account && user) {
         return {
@@ -77,23 +76,23 @@ export default NextAuth({
           accessTokenExpires: Date.now() + account.expires_in * 1000,
           refreshToken: account.refresh_token,
           user,
-        }
+        };
       }
 
       // Return previous token if the access token has not expired yet
       if (Date.now() < token.accessTokenExpires) {
-        return token
+        return token;
       }
 
       // Access token has expired, try to update it
-      return refreshAccessToken(token)
+      return refreshAccessToken(token);
     },
     async session({ session, token }) {
-      session.user = token.user
-      session.accessToken = token.accessToken
-      session.error = token.error
+      session.user = token.user;
+      session.accessToken = token.accessToken;
+      session.error = token.error;
 
-      return session
+      return session;
     },
   },
-})
+});
