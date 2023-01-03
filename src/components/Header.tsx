@@ -112,7 +112,9 @@ export function Header() {
                   <Button onClick={() => signOut()}>Sign out</Button>
                 </div>
               ) : (
-                <Button onClick={() => signIn('google')}>Sign in</Button>
+                <Button onClick={() => signIn('google')}>
+                  Sign in with Google
+                </Button>
               )}
             </div>
           </div>

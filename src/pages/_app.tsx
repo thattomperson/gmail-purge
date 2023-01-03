@@ -1,6 +1,7 @@
 import { SessionProvider } from 'next-auth/react';
 import { useFathom } from '@/hooks/useFathom';
 import '../styles/globals.css';
+import { trpc } from '@/utils/trpc';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   useFathom('CGQPWQFJ');
@@ -12,4 +13,4 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   );
 }
 
-export default MyApp;
+export default trpc.withTRPC(MyApp);

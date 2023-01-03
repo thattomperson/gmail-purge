@@ -1,8 +1,10 @@
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 const qs = {
   entity: 'event',
-  entity_id: 'JUK5OTAF',
+  entity_id: process.env.NEXT_PUBLIC_FATHOM_DELETE_EVENT_ID,
   aggregates: 'conversions,unique_conversions',
 };
 
@@ -13,13 +15,25 @@ https.get(
   url,
   {
     headers: {
-      Authorization:
-        'Bearer 1125899926000058|slKDFkXlqI8geLZxpHybzse9FXmriPO1ZmmnL2Ne',
+      Authorization: `Bearer ${process.env.FATHOM_API_KEY}`,
     },
   },
   function (res) {
+    let data = '';
     res.on('data', (d) => {
-      process.stdout.write(d);
+      data += d;
+    });
+
+    res.on('end', () => {
+      const file = path.join(__dirname, '..', 'src', 'utils', 'stats.js');
+
+      const json = JSON.parse(data);
+      const stats = json[0];
+
+      fs.writeFileSync(
+        file,
+        `export const conversions = ${stats.conversions};\nexport const unique_conversions = ${stats.unique_conversions};`,
+      );
     });
   },
 );
