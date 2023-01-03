@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 
 // const GOOGLE_AUTHORIZATION_URL =
 //   "https://accounts.google.com/o/oauth2/v2/auth?" +
@@ -18,25 +18,25 @@ import GoogleProvider from "next-auth/providers/google"
 async function refreshAccessToken(token) {
   try {
     const url =
-      "https://oauth2.googleapis.com/token?" +
+      'https://oauth2.googleapis.com/token?' +
       new URLSearchParams({
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        grant_type: "refresh_token",
+        grant_type: 'refresh_token',
         refresh_token: token.refreshToken,
-      })
+      });
 
     const response = await fetch(url, {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      method: "POST",
-    })
+      method: 'POST',
+    });
 
-    const refreshedTokens = await response.json()
+    const refreshedTokens = await response.json();
 
     if (!response.ok) {
-      throw refreshedTokens
+      throw refreshedTokens;
     }
 
     return {
@@ -44,12 +44,12 @@ async function refreshAccessToken(token) {
       accessToken: refreshedTokens.access_token,
       accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
-    }
+    };
   } catch (error) {
     return {
       ...token,
-      error: "RefreshAccessTokenError",
-    }
+      error: 'RefreshAccessTokenError',
+    };
   }
 }
 
@@ -73,7 +73,7 @@ export default NextAuth({
         return {
           // id_token: token.id_token,
           accessToken: account.access_token,
-          accessTokenExpires: Date.now() + account.expires_in * 1000,
+          accessTokenExpires: Date.now() + (account as any).expires_in * 1000,
           refreshToken: account.refresh_token,
           user,
         };
@@ -89,8 +89,8 @@ export default NextAuth({
     },
     async session({ session, token }) {
       session.user = token.user;
-      session.accessToken = token.accessToken;
-      session.error = token.error;
+      (session as any).accessToken = token.accessToken;
+      (session as any).error = token.error;
 
       return session;
     },
