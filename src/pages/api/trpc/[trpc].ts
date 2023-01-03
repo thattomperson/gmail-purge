@@ -54,14 +54,16 @@ export const appRouter = t.router({
 
   deleteLabelMessages: proc
     .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx: { gmail } }) => {
+    .mutation(async ({ input, ctx: { gmail } }) => {
       const { messages } = await gmail.getMessages({
         maxResults: 500,
         labelIds: input.id,
       });
 
       const ids = messages.map((message) => message.id);
-      return gmail.deleteMessages({ ids });
+      gmail.deleteMessages({ ids });
+
+      return gmail.getLabelDetails({ id: input.id });
     }),
 
   getSubscribedEmails: proc

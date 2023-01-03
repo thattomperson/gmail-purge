@@ -9,8 +9,8 @@ export function Stats() {
             Secure and Easy
           </h2>
           <p className="mt-3 text-xl text-gray-500 sm:mt-4">
-            We don't have databases or servers, Everything happens safely from
-            your browser.
+            We don&apos;t have databases or servers, Everything happens safely
+            from your browser.
           </p>
         </div>
       </div>

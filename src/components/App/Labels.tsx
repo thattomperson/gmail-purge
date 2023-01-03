@@ -15,15 +15,10 @@ import {
 } from '@heroicons/react/outline';
 import { TagIcon as SolidTagIcon } from '@heroicons/react/solid';
 import { Container } from '../Container';
-import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { record } from '@/hooks/useFathom';
 import { trpc } from '@/utils/trpc';
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 function Icon({ type }) {
   switch (type) {
@@ -91,8 +86,10 @@ function LabelName({ label }) {
     default:
       return (
         <div className="divide-x divide-gray-400 flex w-full content-around">
-          {label.name.split('/').map((part) => (
-            <span className="first:pl-0 pl-2 pr-2">{part}</span>
+          {label.name.split('/').map((part, i) => (
+            <span key={i} className="first:pl-0 pl-2 pr-2">
+              {part}
+            </span>
           ))}
         </div>
       );
@@ -100,7 +97,7 @@ function LabelName({ label }) {
 }
 
 function useDelete(id) {
-  const { data } = trpc.getLabelDetails.useQuery({ id });
+  const { data, refetch } = trpc.getLabelDetails.useQuery({ id });
 
   console.log({ data });
 
@@ -122,22 +119,17 @@ function useDelete(id) {
 
   useEffect(() => {
     let subscribed = true;
+
+    const mutation = trpc.deleteLabelMessages.useMutation();
+
     async function main() {
       try {
         let details = data;
         do {
           const before = details.messagesTotal;
-
-          console.log({ details });
-
-          details = await fetch(`/api/labels/${id}/delete?only_read=${read}`);
-
-          console.log({ details });
-          mutate(details);
+          details = await mutation.mutateAsync({ id });
           const deleted = before - details.messagesTotal;
-
-          console.log({ deleted });
-
+          refetch();
           if (deleted > 0) {
             record(process.env.NEXT_PUBLIC_FATHOM_DELETE_EVENT_ID, deleted);
           }

@@ -73,7 +73,7 @@ export default NextAuth({
         return {
           // id_token: token.id_token,
           accessToken: account.access_token,
-          accessTokenExpires: Date.now() + account.expires_in * 1000,
+          accessTokenExpires: Date.now() + (account as any).expires_in * 1000,
           refreshToken: account.refresh_token,
           user,
         };
@@ -89,8 +89,8 @@ export default NextAuth({
     },
     async session({ session, token }) {
       session.user = token.user;
-      session.accessToken = token.accessToken;
-      session.error = token.error;
+      (session as any).accessToken = token.accessToken;
+      (session as any).error = token.error;
 
       return session;
     },
