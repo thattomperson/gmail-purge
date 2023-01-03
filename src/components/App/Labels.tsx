@@ -1,19 +1,19 @@
 import {
-  ChatAlt2Icon,
-  ChatIcon,
+  ChatBubbleLeftIcon,
+  ChatBubbleOvalLeftIcon,
   DocumentTextIcon,
   ExclamationCircleIcon,
   InboxIcon,
   InformationCircleIcon,
-  MailIcon,
+  EnvelopeIcon,
   PaperAirplaneIcon,
   StarIcon,
   TagIcon,
   TrashIcon,
   UserGroupIcon,
   UserIcon,
-} from '@heroicons/react/outline';
-import { TagIcon as SolidTagIcon } from '@heroicons/react/solid';
+} from '@heroicons/react/24/outline';
+import { TagIcon as SolidTagIcon } from '@heroicons/react/24/solid';
 import { Container } from '../Container';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
@@ -35,11 +35,11 @@ function Icon({ type }) {
     case 'SPAM':
       return <ExclamationCircleIcon className="w-6" />;
     case 'CHAT':
-      return <ChatIcon className="w-6" />;
+      return <ChatBubbleOvalLeftIcon className="w-6" />;
     case 'SENT':
       return <PaperAirplaneIcon className="w-6" />;
     case 'UNREAD':
-      return <MailIcon className="w-6" />;
+      return <EnvelopeIcon className="w-6" />;
     case 'CATEGORY_SOCIAL':
       return <UserGroupIcon className="w-6" />;
     case 'CATEGORY_PROMOTIONS':
@@ -49,7 +49,7 @@ function Icon({ type }) {
     case 'CATEGORY_UPDATES':
       return <InformationCircleIcon className="w-6" />;
     case 'CATEGORY_FORUMS':
-      return <ChatAlt2Icon className="w-6" />;
+      return <ChatBubbleLeftIcon className="w-6" />;
     default:
       return <SolidTagIcon className="w-6" />;
   }
@@ -99,8 +99,6 @@ function LabelName({ label }) {
 function useDelete(id) {
   const { data, refetch } = trpc.getLabelDetails.useQuery({ id });
 
-  console.log({ data });
-
   const [deleting, setDeleting] = useState(false);
   const [read, setRead] = useState(false);
 
@@ -117,10 +115,10 @@ function useDelete(id) {
     setDeleting(false);
   }
 
+  const mutation = trpc.deleteLabelMessages.useMutation();
+
   useEffect(() => {
     let subscribed = true;
-
-    const mutation = trpc.deleteLabelMessages.useMutation();
 
     async function main() {
       try {
@@ -172,7 +170,6 @@ function Label({ label }) {
         {labelData?.messagesTotal} total
         <br />
         {labelData?.messagesUnread} unread
-        <br />
       </td>
       <td className="relative flex flex-col whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
         {deleting ? (
@@ -189,7 +186,7 @@ function Label({ label }) {
             >
               Delete All<span className="sr-only">, {label.name} messages</span>
             </button>
-            <button
+            {/* <button
               onClick={() => labelData?.messagesUnread > 0 && deleteUnread()}
               className={clsx(
                 labelData?.messagesUnread === 0
@@ -199,7 +196,7 @@ function Label({ label }) {
             >
               Delete Unread
               <span className="sr-only">, {label.name} messages</span>
-            </button>
+            </button> */}
           </>
         )}
       </td>
