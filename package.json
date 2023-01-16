@@ -31,7 +31,7 @@
     "@types/react": "18.0.26",
     "autoprefixer": "^10.4.7",
     "dotenv": "^16.0.3",
-    "eslint": "8.15.0",
+    "eslint": "8.32.0",
     "eslint-config-next": "13.1.1",
     "postcss": "^8.4.13",
     "postcss-focus-visible": "^7.1.0",
