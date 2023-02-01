@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.6.1",
+    "@headlessui/react": "^1.7.8",
     "@heroicons/react": "^2.0.14",
     "@tanstack/react-query": "^4.24.4",
     "@trpc/client": "^10.7.0",
