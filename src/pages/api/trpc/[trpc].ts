@@ -61,7 +61,7 @@ export const appRouter = t.router({
       });
 
       const ids = messages.map((message) => message.id);
-      gmail.deleteMessages({ ids });
+      await gmail.deleteMessages({ ids });
 
       return gmail.getLabelDetails({ id: input.id });
     }),

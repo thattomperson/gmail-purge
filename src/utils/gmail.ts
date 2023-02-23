@@ -99,14 +99,20 @@ export default class Client {
   async post<Input extends Record<string, any>, Output extends any>(
     path: string,
     input: Input,
-  ): Promise<Output> {
+  ): Promise<Output | null> {
     const url = new URL(path, this.baseUrl);
     url.searchParams.set('access_token', this.accessToken);
 
     return fetch(url, {
       method: 'POST',
       body: JSON.stringify(input),
-    }).then((res) => res.json() as Output);
+    }).then(async (res) => {
+      try {
+        return (await res.json()) as Output;
+      } catch (e) {
+        return null;
+      }
+    });
   }
 
   async getLabels() {
