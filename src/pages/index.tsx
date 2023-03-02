@@ -6,6 +6,7 @@ import { App } from '@/components/App';
 import { PrimaryFeatures } from '@/components/PrimaryFeatures';
 import { Stats } from '@/components/Stats';
 import { Hero } from '@/components/Hero';
+import { Footer } from '@/components/Footer';
 
 export default function Home() {
   const { status } = useSession();
@@ -28,12 +29,14 @@ export default function Home() {
         ) : (
           <>
             <Hero />
-            <PrimaryFeatures />
+            {/* <PrimaryFeatures /> */}
             <Stats />
-            <CallToAction />
+
+            {/* <CallToAction /> */}
           </>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

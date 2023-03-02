@@ -33,7 +33,9 @@ https.get(
 
       fs.writeFileSync(
         file,
-        `export const conversions = ${stats.conversions};\nexport const unique_conversions = ${stats.unique_conversions};`,
+        `export const conversions = ${
+          stats.conversions * 200
+        };\nexport const unique_conversions = ${stats.unique_conversions};`,
       );
     });
   },
